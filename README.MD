@@ -81,15 +81,18 @@ Você pode rodar o projeto pelo VSCode ou CMD.
 
 #### 💻 Pelo VSCode
 
-- Abra o terminal → Selecione "Split Terminal" ou use `Ctrl + Shift + '`
+- Abra o terminal → Selecione "Split Terminal" e selecione o CMD (pelo powershell costuma bloquear o download das dependencias.)
 - Execute:
 
 ```bash
 pip install redis
-pip install python-dotenv
+pip install python-dotenv 
+```
+- Aparecerá uma pasta `venv` no projeto indicando sucesso, se a pasta nao aparecer rode o comando abaixo no cmd pra criar o ambiente virtual.
+```bash
+python -m venv venv
 ```
 
-- Aparecerá uma pasta `venv` no projeto indicando sucesso.
 
 #### 🖥️ Pelo CMD
 
