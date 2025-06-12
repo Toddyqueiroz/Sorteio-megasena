@@ -1,155 +1,134 @@
-=======================================================================================================================================================================
-RECOMENDACOES!
+# 🔢 MegaSena Redis
 
-1- no arquivo connect_redis.py configurar a conexao corretamente com o banco que voce criou!! SE NAO FIZER NAO VAI FUNCIONAR!
-2- as consultas somente irao funcionar se voce ja tiver gerado os sorteios, entao lembre de rodar o arquivo que cria os sorteios PRIMEIRO!
-3- ordem recomendada pra executar o programa(executar consulta antes de megasena nao funcionara pois voce precisa criar os dados primeiro):
+Este projeto simula sorteios fictícios da Mega-Sena, armazenando e consultando os dados em um banco Redis. Ideal para fins didáticos.
 
-- test_connection_redis.py 
-- limpeza_redis.py 
-- megasena_redis.py 
-- consulta_redis.py  
-(executar consulta antes de megasena nao vai funcionar pois voce precisa criar os dados primeiro,
- leia o proximo topico para entender melhor oque cada arquivo faz!)
+---
 
+## 🚨 RECOMENDAÇÕES IMPORTANTES
 
-=======================================================================================================================================================================
-lISTA DE ARQUIVOS E OQUE ELES FAZEM!
+1. No arquivo `connect_redis.py`, configure corretamente suas credenciais do Redis Cloud. **Se não fizer isso, o sistema não funcionará!**
+2. As consultas só funcionarão se os sorteios já tiverem sido gerados. Execute primeiro o script `megasena_redis.py`.
+3. Ordem recomendada para rodar o programa:
 
-connect_redis.py = configure aqui as suas credenciais no local indicado dentro do codigo pra acessar o banco de dados do redis.
+```
+1 - test_connection_redis.py  
+2 - limpeza_redis.py  
+3 - megasena_redis.py  
+4 - consulta_redis.py  
+```
 
-megasena_redis.py = cria e salva no banco todos os sorteios.
+Executar `consulta_redis.py` antes de `megasena_redis.py` resultará em erro por falta de dados.
 
-test_connection_redis.py = testa pra ver se a sua conexao está funcionando adequadamente.
+---
 
-limpeza_redis.py = esse ele vai servir pra apagar seus sorteios criados caso ele tenha bugado na hora de criar os arquivos e bugarem, ai voce cria novamente os sorteios. (rode esse arquivo primeiro, para garantir que nao existe nenhum dado existente previamente.)
+## 📁 O QUE CADA ARQUIVO FAZ?
 
-consulta_redis.py = esse arquivo possui funcoes para fazer consultas no banco, caso queira é só ir adicionando novas funcoes para ir consultando. 
+- `connect_redis.py` → Arquivo de configuração. Insira suas credenciais aqui para conectar com o Redis.
+- `megasena_redis.py` → Gera os sorteios e salva no banco (somente quartas e sábados).
+- `test_connection_redis.py` → Testa se a conexão com o Redis está funcionando corretamente.
+- `limpeza_redis.py` → Apaga todos os sorteios salvos no banco. Útil em caso de dados corrompidos ou duplicados.
+- `consulta_redis.py` → Menu interativo com opções de consulta por número, data, intervalo de números ou intervalo de datas.
 
+---
 
-=======================================================================================================================================================================
-ENTENDENDO NOSSO BANCO REDIS
+## 🧠 COMO FUNCIONA O BANCO REDIS AQUI?
 
-No banco de dados o codigo vai criar 2 grupos de chaves, 'sorteio' e 'data' em data: o nome do arquivo sera a data e dentro do arquivo deve conter o numero do sorteio... já em sorteio: o nome do arquivo sera o numero do sorteio e dentro do arquivo tera as informacoes como: numero do sorteio, data, numeros sorteados e total de ganhadores.
+O sistema cria dois grupos de chaves:
 
+- `sorteio:{numero}` → Contém os dados completos de um sorteio (data, números, ganhadores).
+- `data:{dd-mm-aaaa}` → Contém apenas o número do sorteio daquela data.
 
-=======================================================================================================================================================================
-INSTRUCOES PARA CONSEGUIR RODAR O PROGRAMA!
+Isso permite buscas eficientes tanto por número quanto por data.
 
-ETAPA 1: CRIAR O BANCO REDIS. 
+---
 
-1- criar uma conta no site do redis: https://redis.io/try-free/
+## 🛠️ ETAPAS PARA EXECUTAR O PROJETO
 
-2- logar no redis e criar um banco de dados:
-- clique em criar banco de dados, selecione a versao gratis.
-- coloque um nome para seu banco de dados (qualquer nome).
-- selecione 1 host (eu utilizei a da aws mas voce pode usar qualquer uma).
-- escolha a regiao mais perto pra ter uma melhor conexao.
-- escolha o tipo: vamos utilizar o redis stack e nao memcached.
+### 1️⃣ Criar uma conta e banco no Redis Cloud
 
-- pronto, seu banco esta criado!
+1. Acesse: https://redis.io/try-free/
+2. Crie uma conta e entre no painel.
+3. Clique em **Create Database** e escolha:
+   - Um nome para o banco
+   - Um provedor (AWS, Google Cloud etc.)
+   - A região mais próxima
+   - **Tipo**: Redis Stack
+4. Pronto! Seu banco está criado.
 
+---
 
-=======================================================================================================================================================================
-ETAPA 2: PEGAR SUAS CREDENCIAIS PARA CONEXAO.
+### 2️⃣ Obter suas credenciais do Redis
 
-1- obter as suas credenciais de acesso.
+1. No painel, vá na aba **Databases** e clique em **Connect** no banco que você criou.
+2. Selecione a aba **Redis Client** e depois **Python**.
+3. Copie os seguintes dados:
 
-- selecione a aba databases.
-- vai aparecer todos os bancos que voce criou, selecione o banco que voce criou na etapa 1 clicando no botao 'connect'.
-- vai aparecer uma janela com varias opcoes de conexao diferente.
-- voce deve clicar na opcao "Redis Client".
-- selecione o tipo de client que voce vai usar, no projeto usamos Python.
-- ele vai te dar esse codigo abaixo:
+```python
+host='seu_host_aqui',
+port=seu_port,
+username="default",
+password="sua_senha",
+decode_responses=True
+```
 
-        """Basic connection example.
-        """
+4. Cole no arquivo `connect_redis.py` nos locais indicados.
 
-        import redis
+---
 
-        r = redis.Redis(
-            host='*************************************************',
-            port=********,
-            decode_responses=True,
-            username="default",
-            password="*******",
-        )
+### 3️⃣ Instalar as dependências
 
-        success = r.set('foo', 'bar')
-        # True
+Você pode rodar o projeto pelo VSCode ou CMD.
 
-        result = r.get('foo')
-        print(result)
-        # >>> bar
+#### 💻 Pelo VSCode
 
+- Abra o terminal → Selecione "Split Terminal" ou use `Ctrl + Shift + '`
+- Execute:
 
-
-
-
- - voce so precisa da parte abaixo:
-
-    host='endereco_do_seu_banco_de_dados', 
-    port= numero_da_porta,
-    decode_responses=True,
-    username="nome_do_seu_username",
-    password="sua_senha",
-
-- sua senha vai estar oculta, entao clique no icone pra mostrar os dados ocultos. 
-- pegue as informacoes e coloque no local indicado no arquivo: connect_redis.py
-
-
-=======================================================================================================================================================================
-ETAPA 3: INSTALAR AS DEPENDENCIAS NA SUA MAQUINA.
-
-1- se voce for rodar pelo vscode segue o passo abaixo, se for rodar pelo CMD veja o proximo passo: 
-
-- RODAR VIA VSCODE
-
-- abrir o terminal, selecione split terminal / command prompt
-- o cmd vai abrir dentro do seu terminal do vscode, agora falta instalar as dependencias.
-
-- rode o comando:
+```bash
 pip install redis
-
-- apos finalizar rode o proximo comando:
 pip install python-dotenv
+```
 
--apos finalizar deve aparecer uma pastinha com nome de "venv" dentro do seu projeto que significa que foi instalado com sucesso.
+- Aparecerá uma pasta `venv` no projeto indicando sucesso.
 
-- feche o terminar e abra novamente antes de executar o programa.
+#### 🖥️ Pelo CMD
 
--------------------------------------------------------------------------------------------------------------------------------------
--  RODAR DIRETO NO CMD
+- Abra o CMD como administrador
+- Navegue até a pasta do projeto:
 
-- abra o cmd como administrador
-- selecione a pasta do seu projeto usando o comando: cd c:\local_do_seu_projeto
+```bash
+cd C:\caminho\do\seu\projeto
+```
 
-- agora falta instalar as dependencias.
+- Execute:
 
-- rode o comando:
+```bash
 pip install redis
-
-- apos finalizar rode o proximo comando:
 pip install python-dotenv
+```
 
--apos finalizar deve aparecer uma pastinha com nome de "venv" dentro do seu projeto que significa que foi instalado com sucesso.
+- Pronto, dependências instaladas.
 
-- feche o cmd e abra novamente antes de executar o programa, lembre se de selecionar a pasta do seu projeto novamente usando o comando: cd c:\local_do_seu_projeto.
+---
+
+### 4️⃣ Rodar o programa
+
+1. Ative o ambiente virtual:
+
+```bash
+.\venv\Scripts\activate
+```
+
+2. Execute os arquivos na ordem recomendada:
+
+```bash
+python test_connection_redis.py
+python limpeza_redis.py
+python megasena_redis.py
+python consulta_redis.py
+```
+
+---
 
 
-=======================================================================================================================================================================
-ETAPA 4: RODAR O PROGRAMA.
-
-1- pra rodar o programa vamos rodar o seguinte comando: .\venv\Scripts\activate
-apos rodar o comando vai aparecer algo do tipo no console: 
-(venv) C:\caminho_do_seu_projeto>
-isso indica que voce ja esta rodando o projeto, agora so rodar os arquivos.
-
-
-2- comando para rodar QUALQUER arquivo do projeto: python nome_do_arquivo.py
-
-3- siga a ordem recomendada para o programa funcionar (esta dentro do topico RECOMENDACOES).
-=======================================================================================================================================================================
-
-
-
+🚀 Projeto feito para aprendizado com Redis e Python!
