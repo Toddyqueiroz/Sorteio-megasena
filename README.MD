@@ -92,6 +92,7 @@ pip install python-dotenv
 ```bash
 python -m venv venv
 ```
+- Após aparecer a pastinha venv no projeto avance para o proximo passo.
 
 
 #### 🖥️ Pelo CMD
@@ -109,8 +110,11 @@ cd C:\caminho\do\seu\projeto
 pip install redis
 pip install python-dotenv
 ```
-
-- Pronto, dependências instaladas.
+- Aparecerá uma pasta `venv` no projeto indicando sucesso, se a pasta nao aparecer rode o comando abaixo no cmd pra criar o ambiente virtual.
+```bash
+python -m venv venv
+```
+- Após aparecer a pastinha venv no projeto avance para o proximo passo.
 
 ---
 
@@ -123,7 +127,6 @@ pip install python-dotenv
 ```
 
 2. Execute os arquivos na ordem recomendada:
-
 ```bash
 python test_connection_redis.py
 python limpeza_redis.py
@@ -133,5 +136,27 @@ python consulta_redis.py
 
 ---
 
+### Possiveis erros na hora de rodar os arquivos:
+
+- se na hora de rodar os arquivos aparecer o seguinte erro: ModuleNotFoundError: No module named 'redis'
+- rode o comando abaixo:
+```bash
+pip install redis
+```
+- se aparecer esse erro:
+
+```
+Traceback (most recent call last):
+  File "C:\caminho do seu projeto\test_connection_redis.py", line 2, in <module>
+    from connect_redis import r
+  File "C:\caminho do seu projeto\connect_redis.py", line 11
+    port= porta aqui, #esta com erro porque ele espera um numero, apos colocar o numero da porta do seu banco de dados vai funcionar.
+          ^^^^^^^^^^
+SyntaxError: invalid syntax. Perhaps you forgot a comma? 
+```
+
+- esse erro acima acontece porque voce nao configurou corretamente a conexao com o banco de dados!
+
+---
 
 🚀 Projeto feito para aprendizado com Redis e Python!
